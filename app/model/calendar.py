@@ -56,3 +56,27 @@ class Day:
                 slot = time(hour, minute)
                 self.slots[slot] = None
 
+
+class Calendar:
+    def __init__(self):
+        self.days: dict[date, Day] = {}
+        self.events: dict[str, Event] = {}
+
+    def add_event(self, title: str, description: str, date_: date, start_at: time, end_at: time) -> str:
+        if date_ < datetime.now().date():
+            date_lower_than_today_error()
+
+        if date_ not in self.days:
+            self.days[date_] = Day(date_)
+
+        event = Event(title, description, date_, start_at, end_at)
+        self.days[date_].add_event(event)
+        self.events[event.id] = event
+
+        return event.id
+
+    def add_reminder(self, event_id: str, date_time: datetime, type_: str):
+        if event_id not in self.events:
+            event_not_found_error()
+
+        self.events[event_id].add_reminder(date_time, type_)
